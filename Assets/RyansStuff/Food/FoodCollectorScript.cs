@@ -9,18 +9,11 @@ public class FoodCollectorScript : MonoBehaviour
     public delegate void OnSizeChange(float newSize, float diff);
     public OnSizeChange onSizeChange;
 
-    Rigidbody2D my_rigidbody;
+    // Rigidbody2D my_rigidbody;
 
-    // Start is called before the first frame update
     void Start()
     {
-        my_rigidbody = this.GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // my_rigidbody = this.GetComponent<Rigidbody2D>();
     }
 
     public void HandleFood(float diff)
