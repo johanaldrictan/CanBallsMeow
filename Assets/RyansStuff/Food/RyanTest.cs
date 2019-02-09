@@ -13,5 +13,6 @@ public class RyanTest : MonoBehaviour
     {
         print("Testing Delegate!");
         GameObject.Find("EmptyCat").transform.localScale *= newSize / (newSize - diff);
+        GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (newSize * 100) + "%";
     }
 }
