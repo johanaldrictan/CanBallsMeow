@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Jump : MonoBehaviour
 {
+    //NOT NEEDED ANYMORE...Keeping this so that folder meta files dont die
     private Rigidbody2D rb;
     private CircleCollider2D cc;
     public int startingJump = 7; //Default fatness that would get a good jump

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Translate_Spawning : MonoBehaviour {
+public class TranslateSpawner : MonoBehaviour {
 
     public float horizontalTranslateRange;          // var for length of horizontal translation
 

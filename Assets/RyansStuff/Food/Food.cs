@@ -3,27 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class FoodScript : MonoBehaviour
-{
-    private Sprite[] foodArt;
-
+public class Food : MonoBehaviour
+{ 
     public float foodValue = 0.1f;
-
-    void Start()
-    {
-        // Get random food art
-        if (foodArt == null)
-        {
-            foodArt = Resources.LoadAll<Sprite>("FoodArt");
-        }
-
-        SpriteRenderer spriteRenderer = this.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = foodArt[Random.Range(0, foodArt.Length)];
-    }
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        FoodCollectorScript foodCollector = other.collider.GetComponent<FoodCollectorScript>();
+        FoodCollector foodCollector = other.collider.GetComponent<FoodCollector>();
         if (foodCollector != null)
         {
             foodCollector.HandleFood(foodValue);

@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    //dash variables
     [SerializeField] float speed;
     [SerializeField] float dashSideForce;
     [SerializeField] float dashUpForce;
     [SerializeField] float timeForDash;
     [SerializeField] KeyCode left;
     [SerializeField] KeyCode right;
+    public int startingJump = 7; //Default fatness that would get a good jump
+    private int doubleJumpCounter = 0;
+
+
+    private FoodCollector m_foodCollector;
+    private Rigidbody2D rb;
+    private CircleCollider2D cc;
 
     CircleCollider2D m_CircleCollider;
     Rigidbody2D m_RigidBody;
@@ -22,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_foodCollector = GetComponent<FoodCollector>();
         m_CircleCollider = GetComponent<CircleCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();   
     }
@@ -30,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Movement();
+        if (Input.GetKeyDown("w"))
+        {
+            playerJump();
+        }
     }
 
     void Movement()
@@ -80,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
-        Debug.Log(m_IsGrounded);
+        //Debug.Log(m_IsGrounded);
         if (dashTimer > timeForDash)
         {
             ResetDash();
@@ -111,11 +124,35 @@ public class PlayerMovement : MonoBehaviour
         if(Physics2D.Raycast(pos, Vector3.down, 0.01f).collider != null)
         {
             m_IsGrounded = true;
+            doubleJumpCounter = 0;
         }
         else
         {
             m_IsGrounded = false;
             ResetDash();
+        }
+    }
+
+    void playerJump()
+    {
+        rb = GetComponent<Rigidbody2D>();
+
+        //First Jump Off Ground
+        if (m_IsGrounded)
+        {
+            rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
+            doubleJumpCounter += 1;
+            //print(doubleJumpCounter);
+        }
+
+        //Double Jump
+        else if ((!m_IsGrounded) && doubleJumpCounter < 2)
+        {
+            Vector3 velocity = rb.velocity;
+            velocity.y = 0;
+            rb.velocity = velocity;
+            rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
+            doubleJumpCounter += 1;
         }
     }
 }
