@@ -6,7 +6,8 @@ public class Jump : MonoBehaviour
 {
     private Rigidbody2D rb;
     private CircleCollider2D cc;
-    private int catFatness = 7; //Default fatness that would get a good jump
+    public int startingJump = 7; //Default fatness that would get a good jump
+    public int catFatness = 0; //The higher this number, the lower the jump will be
     private int doubleJumpCounter = 0;
     // Start is called before the first frame update
     void Start()
@@ -31,7 +32,7 @@ public class Jump : MonoBehaviour
         //First Jump Off Ground
         if (isGrounded())
         {
-            rb.AddForce(new Vector2(0, catFatness), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(0, startingJump - (.2f * catFatness)), ForceMode2D.Impulse);
             doubleJumpCounter += 1;
             print(doubleJumpCounter); 
         }
@@ -42,7 +43,7 @@ public class Jump : MonoBehaviour
             Vector3 velocity = rb.velocity;
             velocity.y = 0;
             rb.velocity = velocity;
-            rb.AddForce(new Vector2(0, catFatness), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(0, startingJump - (.2f * catFatness)), ForceMode2D.Impulse);
             doubleJumpCounter += 1;
         }
     }
