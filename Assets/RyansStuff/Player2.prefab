@@ -40,7 +40,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9190746384851306969}
   - component: {fileID: 9190746384851306975}
-  - component: {fileID: 66455242148890799}
   - component: {fileID: 3390076790972063195}
   - component: {fileID: 9190746384851306968}
   - component: {fileID: 2515123401417751185}
@@ -116,31 +115,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &66455242148890799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9190746384851306972}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da35e786f782474bac64b69925aeab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 30
-  extraJumpValue: 1
-  jumpKey: 119
-  rotateLeft: 113
-  rotateRight: 101
-  spriteRenderer: {fileID: 9190746384851306975}
-  groundCheck: {fileID: 5509746613404627950}
-  checkRadius: 0.5
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 512
-  scaleFactor: 0.101
 --- !u!114 &3390076790972063195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 8
-  extraJumpValue: 1
+  extraJumpValue: 6
   jumpKey: 119
   xAxis: 
   yAxis: 
@@ -163,7 +137,6 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
-  scaleFactor: 0.1
 --- !u!50 &9190746384851306968
 Rigidbody2D:
   serializedVersion: 4

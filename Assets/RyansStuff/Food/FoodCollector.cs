@@ -16,12 +16,13 @@ public class FoodCollector : MonoBehaviour
     public void HandleFood(float diff)
     {
         catFatness += diff;
-        OnSizeChange(catFatness, diff);
+        // transform.localScale *= catFatness / (catFatness - diff);
+        // OnSizeChange(catFatness, diff);
     }
 
-    public void OnSizeChange(float currentFatness, float deltaFatness)
-    {
-        transform.localScale *= currentFatness / (currentFatness - deltaFatness);
-        // GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (currentFatness * 100) + "%";
-    }
+    // public void OnSizeChange(float currentFatness, float deltaFatness)
+    // {
+    //     print(transform.localScale);
+    //     // GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (currentFatness * 100) + "%";
+    // }
 }

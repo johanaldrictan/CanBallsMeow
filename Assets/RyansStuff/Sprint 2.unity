@@ -941,6 +941,16 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2515123401417751185, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8050973182242837047, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
         type: 3}
       propertyPath: xAxis
@@ -951,7 +961,8 @@ PrefabInstance:
       propertyPath: yAxis
       value: Vertical
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 66455242148890799, guid: e4c29dfc7636657419edcfd0be33567a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e4c29dfc7636657419edcfd0be33567a, type: 3}
 --- !u!1 &432407172
 GameObject:
@@ -969,7 +980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &432407173
 MonoBehaviour:
   m_ObjectHideFlags: 0

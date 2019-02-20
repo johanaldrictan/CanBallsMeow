@@ -10,11 +10,9 @@ public class PlayerController2 : MonoBehaviour
     public KeyCode jumpKey;
     public String xAxis;
     public String yAxis;
-    // public SpriteRenderer spriteRenderer;
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask whatIsGround;
-    public float scaleFactor;
 
     // private float moveInput;
     // private Rigidbody2D rb;
@@ -31,15 +29,18 @@ public class PlayerController2 : MonoBehaviour
     private FoodCollector m_foodCollector;
     private CircleCollider2D m_CircleCollider;
     private Rigidbody2D m_RigidBody;
-    
+    private SpriteRenderer m_SpriteRenderer;
+
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
     private float maxSpeed = 5;
+    private int airActions = 2;
 
     void Start()
     {
         m_foodCollector = GetComponent<FoodCollector>();
         m_CircleCollider = GetComponent<CircleCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         current_state = PlayerState.FALL;
     }
@@ -59,6 +60,10 @@ public class PlayerController2 : MonoBehaviour
         if (axis != 0)
         {
             m_RigidBody.AddForce(Vector2.right * axis * 100, ForceMode2D.Impulse);
+            float scaleFactor = transform.localScale.y;
+            // m_SpriteRenderer.flipX = axis > 0;
+            transform.localScale = new Vector3(-Math.Sign(axis) * scaleFactor, scaleFactor, 1);
+            // print(transform.localScale);
         }
         else
         {
@@ -96,11 +101,17 @@ public class PlayerController2 : MonoBehaviour
     private void DoGround()
     {
         maxSpeed = 5;
+        airActions = 2;
+        if (!Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
+        {
+            current_state = PlayerState.FALL;
+            return;
+        }
         if (Input.GetKeyDown(jumpKey))
         {
             current_state = PlayerState.FALL;
-            m_RigidBody.velocity = m_RigidBody.velocity + (Vector2.up * jumpForce);
-            Debug.Log("JUMP");
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
+            // Debug.Log("JUMP");
             return;
         }
     }
@@ -122,6 +133,12 @@ public class PlayerController2 : MonoBehaviour
             m_RigidBody.gravityScale = 2;
         }
 
+        if (Input.GetKeyDown(jumpKey) && airActions > 0)
+        {
+            airActions -= 1;
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, extraJumpValue);
+        }
+
         // float axis = Input.GetAxisRaw("Horizontal");
         // m_RigidBody.speed * axis, m_RigidBody.velocity.y);
     }
@@ -136,7 +153,7 @@ public class PlayerController2 : MonoBehaviour
         if (Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
         {
             current_state = PlayerState.GROUND;
-            Debug.Log("Landed");
+            // Debug.Log("Landed");
         }
     }
 
