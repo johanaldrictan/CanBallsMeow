@@ -18,9 +18,10 @@ public class FoodCollector : MonoBehaviour
         catFatness += diff;
         OnSizeChange(catFatness, diff);
     }
+
     public void OnSizeChange(float currentFatness, float deltaFatness)
     {
         transform.localScale *= currentFatness / (currentFatness - deltaFatness);
-        GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (currentFatness * 100) + "%";
+        // GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (currentFatness * 100) + "%";
     }
 }
