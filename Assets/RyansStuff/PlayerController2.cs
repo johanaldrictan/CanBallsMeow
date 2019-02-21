@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class PlayerController2 : MonoBehaviour
 {
-    public float jumpForce;
-    public int extraJumpValue;
-    public KeyCode jumpKey;
-    public KeyCode fallKey;
-    public String xAxis;
-    public String yAxis;
+    public float jumpForce = 8;
+    public int extraJumpValue = 6;
+    public KeyCode jumpKey = KeyCode.W;
+    public KeyCode fallKey = KeyCode.S;
+    public String xAxis = "Horizontal";
+    public String yAxis = "Vertical";
     public Transform groundCheck;
-    public float checkRadius;
+    public float checkRadius = 0.5f;
     public LayerMask whatIsGround;
 
     // private float moveInput;
