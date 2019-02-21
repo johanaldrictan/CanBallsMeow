@@ -16,7 +16,7 @@ public class FoodCollector : MonoBehaviour
     public void HandleFood(float diff)
     {
         catFatness += diff;
-        // transform.localScale *= catFatness / (catFatness - diff);
+        transform.localScale *= catFatness / (catFatness - diff);
         // OnSizeChange(catFatness, diff);
     }
 

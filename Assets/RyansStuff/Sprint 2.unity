@@ -961,6 +961,11 @@ PrefabInstance:
       propertyPath: yAxis
       value: Vertical
       objectReference: {fileID: 0}
+    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: checkRadius
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 66455242148890799, guid: e4c29dfc7636657419edcfd0be33567a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e4c29dfc7636657419edcfd0be33567a, type: 3}
@@ -1122,7 +1127,7 @@ MonoBehaviour:
   rotateRight: 101
   spriteRenderer: {fileID: 657956781}
   groundCheck: {fileID: 943753102}
-  checkRadius: 0.5
+  checkRadius: 0.1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512

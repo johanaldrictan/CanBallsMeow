@@ -8,6 +8,7 @@ public class PlayerController2 : MonoBehaviour
     public float jumpForce;
     public int extraJumpValue;
     public KeyCode jumpKey;
+    public KeyCode fallKey;
     public String xAxis;
     public String yAxis;
     public Transform groundCheck;
@@ -27,18 +28,19 @@ public class PlayerController2 : MonoBehaviour
     // private CircleCollider2D cc;
 
     private FoodCollector m_foodCollector;
-    private CircleCollider2D m_CircleCollider;
+    private BoxCollider2D m_BoxCollider2D;
     private Rigidbody2D m_RigidBody;
     private SpriteRenderer m_SpriteRenderer;
 
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
+    private Collider2D lastGround = null;
     private float maxSpeed = 5;
     private int airActions = 2;
 
     void Start()
     {
         m_foodCollector = GetComponent<FoodCollector>();
-        m_CircleCollider = GetComponent<CircleCollider2D>();
+        m_BoxCollider2D = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -102,7 +104,7 @@ public class PlayerController2 : MonoBehaviour
     {
         maxSpeed = 5;
         airActions = 2;
-        if (!Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
+        if (!Physics2D.OverlapCircle(groundCheck.position + m_RigidBody.velocity.y * Vector3.up, checkRadius, whatIsGround))
         {
             current_state = PlayerState.FALL;
             return;
@@ -114,6 +116,23 @@ public class PlayerController2 : MonoBehaviour
             // Debug.Log("JUMP");
             return;
         }
+        if (Input.GetKeyDown(fallKey) && lastGround.name == "OneWay")
+        {
+            current_state = PlayerState.FALL;
+            StartCoroutine(FallThrough(lastGround));
+            lastGround = null;
+            // Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, true);
+            // m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
+            // Debug.Log("JUMP");
+            return;
+        }
+    }
+
+    IEnumerator FallThrough(Collider2D lastGround)
+    {
+        Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, true);
+        yield return new WaitForSeconds(0.5f);
+        Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, false);
     }
 
     private void DoDash()
@@ -122,6 +141,18 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoFall()
     {
+        // if (m_RigidBody.velocity.y < 0 && Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
+        // {
+        //     // Collider2D new_ground = Physics2D.OverlapCircleAll(groundCheck.position, checkRadius, whatIsGround)[0];
+        //     // if (new_ground != last_ground)
+        //     // {
+        //     current_state = PlayerState.GROUND;
+        //     m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
+        //     Debug.Log("Landed" + Time.frameCount);
+        //     return;
+        //     // }
+        // }
+
         // print("falllling");
         // m_RigidBody.AddForce(Vector2.down * 3);
         if (Input.GetKey(jumpKey) && m_RigidBody.velocity.y > 0)
@@ -149,13 +180,23 @@ public class PlayerController2 : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        // TODO: Make better condition
-        if (Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
+        if (other.collider.tag != "Food" && m_RigidBody.velocity.y <= 0 && Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
         {
             current_state = PlayerState.GROUND;
-            // Debug.Log("Landed");
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
+            Debug.Log("Landed" + Time.frameCount);
+            lastGround = other.collider;
         }
     }
+
+    // void OnCollisionExit2D(Collision2D other)
+    // {
+    //     if (lastGround == other.collider)
+    //     {
+    //         Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, false);
+    //         lastGround = null;
+    //     }        
+    // }
 
     // //dash variables
     // [SerializeField] float speed;

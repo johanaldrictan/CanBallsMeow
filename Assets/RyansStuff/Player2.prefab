@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4325039184787873727}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.0900006, z: 0}
+  m_LocalPosition: {x: 0, y: -5.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9190746384851306969}
@@ -133,7 +133,7 @@ MonoBehaviour:
   xAxis: 
   yAxis: 
   groundCheck: {fileID: 5509746613404627950}
-  checkRadius: 0.5
+  checkRadius: 100
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
@@ -149,7 +149,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.5168796
+  m_Mass: 1.516322
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -197,8 +197,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.17297925, y: -0.60530937}
-  m_Size: {x: 17.9689, y: 9.525292}
+  m_Offset: {x: 0, y: -0.5}
+  m_Size: {x: 18, y: 9.5}
   m_Direction: 1
 --- !u!114 &3365316500200994788
 MonoBehaviour:
