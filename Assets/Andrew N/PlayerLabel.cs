@@ -10,7 +10,7 @@ public class PlayerLabel : MonoBehaviour {
     public Color color = Color.white;   // choose font color/size
     public float fontSize = 10;
     public float offsetX = 0;
-    public float offsetY = 0.5f;
+    public float offsetY = .5f;
 
     float boxW = 150f;
     float boxH = 20f;
