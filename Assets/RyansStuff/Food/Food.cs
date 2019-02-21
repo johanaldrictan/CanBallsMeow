@@ -28,13 +28,13 @@ public class Food : MonoBehaviour
         // Debug.Log("COLLIDE");
 
         // TODO: Ask next meeting to make a new layer. Im not sure if itll blow everyone's stuff up so yeah.
-        if (other.collider.tag == "Food")
-        {
-            // This is a terrible solution bc extra memory.
-            // Also they still bounce off each other for a frame.
-            Physics2D.IgnoreCollision(other.collider, other.otherCollider, true);
-            return;
-        }
+        // if (other.collider.tag == "Food")
+        // {
+        //     // This is a terrible solution bc extra memory.
+        //     // Also they still bounce off each other for a frame.
+        //     Physics2D.IgnoreCollision(other.collider, other.otherCollider, true);
+        //     return;
+        // }
 
         FoodCollector foodCollector = other.collider.GetComponent<FoodCollector>();
         if (foodCollector != null)
