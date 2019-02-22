@@ -18,6 +18,7 @@ public class FoodSpawner : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        // TODO: This actually changes the spawn rate every update to a random number between 2-7.
         spawnRate = Random.Range(2, 7);
         if (Time.time > nextSpawn) {
             whatToSpawn = Random.Range(0, foodTypes.Length); // random value for what to spawn
