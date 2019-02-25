@@ -13,10 +13,12 @@ public class GameController : MonoBehaviour
     private PlayerController player1;
     private PlayerController player2;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPlayer(player1Prefab, new Vector3(-5, -2, 0));
+        SpawnPlayer(player1Prefab, new Vector3(5, 10, 0));
         SpawnPlayer(player2Prefab, new Vector3(5, -2, 0));
     }
     void SpawnPlayer(PlayerController player, Vector3 spawnLoc)

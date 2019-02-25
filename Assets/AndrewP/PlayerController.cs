@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded == true)
         {
             extraJumps = extraJumpValue;
-            Debug.Log(true);
+            //Debug.Log(true);
         }
 
 
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = Vector2.up * jumpForce;
             extraJumps--;
-            Debug.Log(extraJumps);
+            //Debug.Log(extraJumps);
             isGrounded = false;
         }
         else if (Input.GetKeyDown(jumpKey) && extraJumps == 0 && isGrounded == true)
