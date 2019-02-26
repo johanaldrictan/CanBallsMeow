@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whipAttack: 32
-  tail: {x: 0, y: 0, z: 0}
+  tail: {fileID: 8952919362362678868, guid: f72c670509869df4297fbacffce3c922, type: 3}
   attackDuration: 0.05
 --- !u!1001 &510514565
 PrefabInstance:

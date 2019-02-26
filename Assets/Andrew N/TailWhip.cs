@@ -6,18 +6,16 @@ public class TailWhip : MonoBehaviour
 {
 
     public KeyCode whipAttack;
-    public Vector3 tail;
+    public GameObject tail;
 
     public float attackDuration = .03f;
-    //private float timeTillNextAttack = .5f;
     private bool isAttacking = false;
-
     private float attackTimer = 0f;
+    private Vector3 tempPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -27,6 +25,7 @@ public class TailWhip : MonoBehaviour
         {
             flip();
             isAttacking = false;
+            Destroy(tail);
         }
         else if (attackTimer > 0) {
             attackTimer -= Time.deltaTime;
@@ -38,6 +37,9 @@ public class TailWhip : MonoBehaviour
             attackTimer = attackDuration;
             isAttacking = true;
             flip();
+            tempPosition = transform.position;
+            tempPosition.x += 1;
+            Instantiate(tail, tempPosition, Quaternion.identity);
         }
 
 
@@ -50,9 +52,5 @@ public class TailWhip : MonoBehaviour
         transform.localScale = theScale; // flip
     }
 
-    private void enlarge()
-    {
-
-    }
 
 }
