@@ -35,6 +35,7 @@ public class PlayerController2 : MonoBehaviour
     private Rigidbody2D m_RigidBody;
     private SpriteRenderer m_SpriteRenderer;
 
+    [SerializeField]
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
     private Collider2D lastGround = null;
     private float maxSpeed = 5;
@@ -100,7 +101,7 @@ public class PlayerController2 : MonoBehaviour
         jumpQueued = false;
         fallQueued = false;
         
-        print(current_state);
+        // print(current_state);
     }
 
     private void ClampSpeed()
@@ -167,16 +168,22 @@ public class PlayerController2 : MonoBehaviour
     {
     }
 
+    private int unstuck_hack = 0;
     private void DoFall()
     {
+        if (m_RigidBody.velocity.y == 0)
+        {
+            unstuck_hack++;
+            if (unstuck_hack > 3) {print("bug hated\nryan exasperated\nfix created\nHACK ACTIVATED"); current_state = PlayerState.GROUND;}
+        }
+        else {unstuck_hack = 0;}
+
         if (jumpQueued && airActions > 0)
         {
             jumpQueued = false;
-            {
-                Debug.Log(airActions);
-                airActions -= 1;
-                m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
-            }
+            Debug.Log(airActions);
+            airActions -= 1;
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
         }
         if (fallQueued && m_RigidBody.velocity.y <= 0)
         {
@@ -223,7 +230,7 @@ public class PlayerController2 : MonoBehaviour
     {
         if (other.collider.tag != "Food" &&
                 m_RigidBody.velocity.y <= 0 &&
-                other.GetContact(0).normal.y > 0)
+                other.GetContact(0).normal.y >= 0)
         {
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
             Debug.Log("Landed" + Time.frameCount);
