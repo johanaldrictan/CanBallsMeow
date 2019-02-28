@@ -7,6 +7,7 @@ public class TailWhip : MonoBehaviour
 
     public KeyCode whipAttack;
     public GameObject tail;
+    private GameObject tailClone;
 
     public float attackDuration = .03f;
     private bool isAttacking = false;
@@ -25,7 +26,7 @@ public class TailWhip : MonoBehaviour
         {
             flip();
             isAttacking = false;
-            Destroy(tail);
+            Destroy(tailClone);
         }
         else if (attackTimer > 0) {
             attackTimer -= Time.deltaTime;
@@ -38,8 +39,14 @@ public class TailWhip : MonoBehaviour
             isAttacking = true;
             flip();
             tempPosition = transform.position;
-            tempPosition.x += 1;
-            Instantiate(tail, tempPosition, Quaternion.identity);
+            if (transform.localScale.x < 0)
+            {
+                tempPosition.x += 1;
+            }
+            else {
+                tempPosition.x -= 1;
+            }
+            tailClone = GameObject.Instantiate(tail, tempPosition, Quaternion.identity);
         }
 
 
