@@ -79,11 +79,12 @@ public class PlayerController2 : MonoBehaviour
         float axis = Input.GetAxisRaw(xAxis);
         if (axis != 0)
         {
-            m_RigidBody.AddForce(Vector2.right * axis * 100, ForceMode2D.Impulse);
-            float scaleFactor = transform.localScale.y;
-            // m_SpriteRenderer.flipX = axis > 0;
-            transform.localScale = new Vector3(-Math.Sign(axis) * scaleFactor, scaleFactor, 1);
-            // print(transform.localScale);
+            m_RigidBody.AddForce(Vector2.right * Math.Sign(axis) * 5, ForceMode2D.Impulse);
+            if (current_state == PlayerState.GROUND)
+            {
+                float scaleFactor = transform.localScale.y;
+                transform.localScale = new Vector3(-Math.Sign(axis) * scaleFactor, scaleFactor, 1);
+            }
         }
         else
         {
@@ -98,6 +99,8 @@ public class PlayerController2 : MonoBehaviour
 
         jumpQueued = false;
         fallQueued = false;
+        
+        print(current_state);
     }
 
     private void ClampSpeed()
@@ -123,7 +126,7 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoGround()
     {
-        maxSpeed = 5;
+        maxSpeed = 6;
         // airActions = 2;
         // if (!Physics2D.OverlapCircle(groundCheck.position + m_RigidBody.velocity.y * Vector3.up, checkRadius, whatIsGround))
         if (m_RigidBody.velocity.y < -0.1)
@@ -169,9 +172,11 @@ public class PlayerController2 : MonoBehaviour
         if (jumpQueued && airActions > 0)
         {
             jumpQueued = false;
-            Debug.Log(airActions);
-            airActions -= 1;
-            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
+            {
+                Debug.Log(airActions);
+                airActions -= 1;
+                m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
+            }
         }
         if (fallQueued && m_RigidBody.velocity.y <= 0)
         {
@@ -225,7 +230,6 @@ public class PlayerController2 : MonoBehaviour
             lastGround = other.collider;
             airActions = 2;
             current_state = PlayerState.GROUND;
-            print(current_state);
         }
     }
 
