@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class DieandRespawn : MonoBehaviour
 {
@@ -8,10 +9,21 @@ public class DieandRespawn : MonoBehaviour
     private bool blockDeathEvent = false; //To make sure DieAndRespawn() doesn't continually get called. Will later move from Update() to only fire on event
     public int stocks = 3; // 9 if we wanna be techinically correct
     SpriteRenderer sr; //To hide the game object when they are KOd and to render them again when they respawn.
+    public CinemachineVirtualCamera vcam;
+    public CinemachineTargetGroup vgroup;
 
     // Start is called before the first frame update
     void Start()
     {
+        if(GameObject.Find("CM vcam1") != null)
+        {
+            vcam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
+        }
+
+        if(GameObject.Find("TargetGroup1") != null)
+        {
+            vgroup = GameObject.Find("TargetGroup1").GetComponent<CinemachineTargetGroup>();
+        }
     }
 
     // Update is called once per frame
@@ -40,10 +52,12 @@ public class DieandRespawn : MonoBehaviour
             {
                 sr = GetComponent<SpriteRenderer>();
                 sr.enabled = false;
-                yield return new WaitForSeconds(1.0f);
+                vcam.LookAt = null;
+                yield return new WaitForSeconds(0.2f);
                 transform.position = respawnPosition;
                 transform.rotation = Quaternion.identity;
                 sr.enabled = true;
+                vcam.LookAt = vgroup.transform;
                 blockDeathEvent = false;
             }
         }
