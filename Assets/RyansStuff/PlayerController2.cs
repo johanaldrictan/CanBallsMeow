@@ -5,15 +5,18 @@ using UnityEngine;
 
 public class PlayerController2 : MonoBehaviour
 {
-    public float jumpForce = 8;
-    public int extraJumpValue = 6;
+    public float jumpForce = 12; // Should reach platform
+    public float shortJumpForce = 8; // Should reach platform
+    public float doubleJumpForce = 10;
     public KeyCode jumpKey = KeyCode.W;
     public KeyCode fallKey = KeyCode.S;
     public String xAxis = "Horizontal";
     public String yAxis = "Vertical";
-    public Transform groundCheck;
-    public float checkRadius = 0.5f;
+    // public Transform groundCheck;
+    // public float checkRadius = 0.5f;
     public LayerMask whatIsGround;
+
+    public const float jumpSquat = 5; // frames. Melee Yoshi's.
 
     // private float moveInput;
     // private Rigidbody2D rb;
@@ -22,7 +25,7 @@ public class PlayerController2 : MonoBehaviour
 
     ///////////////////////////////////////////////////////////
 
-    enum PlayerState {GROUND, DASH, FALL, ATTACK}
+    enum PlayerState {GROUND, DASH, FALL, ATTACK, JUMP_SQUAT}
 
     // private Rigidbody2D rb;
     // private CircleCollider2D cc;
@@ -36,6 +39,10 @@ public class PlayerController2 : MonoBehaviour
     private Collider2D lastGround = null;
     private float maxSpeed = 5;
     private int airActions = 2;
+    private int jumpSquatTimer = 0;
+
+    private bool jumpQueued;
+    private bool fallQueued;
 
     void Start()
     {
@@ -45,6 +52,16 @@ public class PlayerController2 : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         current_state = PlayerState.FALL;
+
+        // TODO: In merge, replace variable in prefab, instead of doing this junk
+        m_RigidBody.gravityScale = 2;
+    }
+
+    void Update()
+    {
+        // Drops inputs if in fixed update >:(
+        if (Input.GetKeyDown(jumpKey)) {jumpQueued = true;}
+        if (Input.GetKeyDown(fallKey)) {fallQueued = true;}
     }
 
     void FixedUpdate()
@@ -55,6 +72,7 @@ public class PlayerController2 : MonoBehaviour
             case PlayerState.DASH : this.DoDash(); break;
             case PlayerState.FALL : this.DoFall(); break;
             case PlayerState.ATTACK : this.DoAttack(); break;
+            case PlayerState.JUMP_SQUAT : this.DoJumpSquat(); break;
         }
 
         // You can always drift.
@@ -77,6 +95,9 @@ public class PlayerController2 : MonoBehaviour
             }
         }
         this.ClampSpeed();
+
+        jumpQueued = false;
+        fallQueued = false;
     }
 
     private void ClampSpeed()
@@ -84,7 +105,7 @@ public class PlayerController2 : MonoBehaviour
         // Isn't making new objects every frame bad?
         Vector2 clamped = new Vector2(m_RigidBody.velocity.x, m_RigidBody.velocity.y);
         clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
-        clamped.y = Math.Max(-30, clamped.y); // TODO: Fix magic number
+        clamped.y = Math.Max(-15, clamped.y); // TODO: Fix magic number
         m_RigidBody.velocity = clamped;
     }
 
@@ -111,15 +132,17 @@ public class PlayerController2 : MonoBehaviour
             current_state = PlayerState.FALL;
             return;
         }
-        if (Input.GetKeyDown(jumpKey))
+        if (jumpQueued)
         {
-            Debug.Log("grounded");
-            current_state = PlayerState.FALL;
-            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
+            jumpQueued = false;
+            // Debug.Log("grounded");
+            current_state = PlayerState.JUMP_SQUAT;
+            jumpSquatTimer = 0;
             return;
         }
-        if (Input.GetKeyDown(fallKey) && lastGround.name.Contains("OneWay"))
+        if (fallQueued && lastGround.name.Contains("OneWay"))
         {
+            fallQueued = false;
             current_state = PlayerState.FALL;
             StartCoroutine(FallThrough(lastGround));
             lastGround = null;
@@ -143,35 +166,29 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoFall()
     {
-        // if (m_RigidBody.velocity.y < 0 && Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
-        // {
-        //     // Collider2D new_ground = Physics2D.OverlapCircleAll(groundCheck.position, checkRadius, whatIsGround)[0];
-        //     // if (new_ground != last_ground)
-        //     // {
-        //     current_state = PlayerState.GROUND;
-        //     m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
-        //     Debug.Log("Landed" + Time.frameCount);
-        //     return;
-        //     // }
-        // }
+        if (jumpQueued && airActions > 0)
+        {
+            jumpQueued = false;
+            Debug.Log(airActions);
+            airActions -= 1;
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
+        }
+        if (fallQueued && m_RigidBody.velocity.y <= 0)
+        {
+            fallQueued = false;
+            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, -15);
+        }
 
         // print("falllling");
         // m_RigidBody.AddForce(Vector2.down * 3);
-        if (Input.GetKey(jumpKey) && m_RigidBody.velocity.y > 0)
-        {
-            m_RigidBody.gravityScale = 1;
-        }
-        else
-        {
-            m_RigidBody.gravityScale = 2;
-        }
-
-        if (Input.GetKeyDown(jumpKey) && airActions > 0)
-        {
-            Debug.Log(airActions);
-            airActions -= 1;
-            m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, extraJumpValue);
-        }
+        // if (Input.GetKey(jumpKey) && m_RigidBody.velocity.y > 0)
+        // {
+        //     m_RigidBody.gravityScale = 1;
+        // }
+        // else
+        // {
+        //     m_RigidBody.gravityScale = 2;
+        // }
 
         // float axis = Input.GetAxisRaw("Horizontal");
         // m_RigidBody.speed * axis, m_RigidBody.velocity.y);
@@ -179,6 +196,20 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoAttack()
     {
+    }
+
+    private void DoJumpSquat()
+    {
+        jumpSquatTimer += 1;
+        if (jumpSquatTimer > jumpSquat)
+        {
+            current_state = PlayerState.FALL;
+            m_RigidBody.velocity = new Vector2(
+                m_RigidBody.velocity.x,
+                Input.GetKey(jumpKey) ? jumpForce : shortJumpForce
+            );
+            return;
+        }
     }
 
     // BUG: If you get too big, you never exit the one way platforms since they're all one collider.
@@ -205,150 +236,5 @@ public class PlayerController2 : MonoBehaviour
     //         Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, false);
     //         lastGround = null;
     //     }        
-    // }
-
-    // //dash variables
-    // [SerializeField] float speed;
-    // [SerializeField] float dashSideForce;
-    // [SerializeField] float dashUpForce;
-    // [SerializeField] float timeForDash;
-    // [SerializeField] KeyCode left;
-    // [SerializeField] KeyCode right;
-    // public int startingJump = 7; //Default fatness that would get a good jump
-    // private int doubleJumpCounter = 0;
-
-    // float dashTimer = 0f;
-    // bool canDash = false;
-    // KeyCode keyPressed;
-
-    // bool m_IsGrounded = true;
-    // // Start is called before the first frame update
-    // void Start()
-    // {
-    //     m_foodCollector = GetComponent<FoodCollector>();
-    //     m_CircleCollider = GetComponent<CircleCollider2D>();
-    //     m_RigidBody = GetComponent<Rigidbody2D>();   
-    // }
-
-    // // Update is called once per frame
-    // void Update()
-    // {
-    //     Movement();
-    //     if (Input.GetKeyDown("w"))
-    //     {
-    //         playerJump();
-    //     }
-    // }
-
-    // void Movement()
-    // {
-    //     CheckIfGrounded();
-    //     Dashing();
-    //     ClampVel();
-    //     Move();
-    // }
-
-    // void Move()
-    // {
-    //     float axis = Input.GetAxisRaw("Horizontal");
-    //     if (!m_IsGrounded)
-    //     {
-    //         m_RigidBody.velocity = new Vector3(Mathf.Abs(m_RigidBody.velocity.x) * axis, m_RigidBody.velocity.y);
-    //     }
-    //     else
-    //     {
-    //         m_RigidBody.velocity = new Vector3(speed * axis, m_RigidBody.velocity.y);
-    //     }
-    // }
-
-    // void Dashing()
-    // {
-    //     if (canDash)
-    //     {
-    //         Dash();
-    //         dashTimer += Time.deltaTime;
-    //     }
-    //     StartDash();
-    // }
-
-
-    // void StartDash()
-    // {
-
-    //     if(Input.GetKeyDown(left))
-    //     {
-    //         canDash = true;
-    //         keyPressed = left;
-    //     }
-    //     else if(Input.GetKeyDown(right))
-    //     {
-    //         canDash = true;
-    //         keyPressed = right;
-    //     }
-    // }
-
-    // void Dash()
-    // {
-    //     //Debug.Log(m_IsGrounded);
-    //     if (dashTimer > timeForDash)
-    //     {
-    //         ResetDash();
-    //     }
-    //     else
-    //     {
-    //         if (Input.GetKeyDown(keyPressed))
-    //         {
-    //             if (keyPressed == left)
-    //                 m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce));
-    //             else
-    //                 m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce));
-    //             ResetDash();
-    //         }
-    //     }
-    // }
-
-    // void ResetDash()
-    // {
-    //     canDash = false;
-    //     dashTimer = 0;
-    // }
-
-    // void CheckIfGrounded()
-    // {
-
-    //     Vector3 pos = transform.position + Vector3.down * m_CircleCollider.bounds.extents.y;
-    //     if(Physics2D.Raycast(pos, Vector3.down, 0.01f).collider != null)
-    //     {
-    //         m_IsGrounded = true;
-    //         doubleJumpCounter = 0;
-    //     }
-    //     else
-    //     {
-    //         m_IsGrounded = false;
-    //         ResetDash();
-    //     }
-    // }
-
-    // void playerJump()
-    // {
-    //     rb = GetComponent<Rigidbody2D>();
-
-    //     //First Jump Off Ground
-    //     if (m_IsGrounded)
-    //     {
-    //         rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
-    //         doubleJumpCounter += 1;
-    //         //print(doubleJumpCounter);
-    //     }
-
-    //     //Double Jump
-    //     else if ((!m_IsGrounded) && doubleJumpCounter < 2)
-    //     {
-    //         Vector3 velocity = rb.velocity;
-    //         velocity.y = 0;
-    //         rb.velocity = velocity;
-    //         rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
-    //         doubleJumpCounter += 1;
-    //     }
     // }
 }
