@@ -103,20 +103,22 @@ public class PlayerController2 : MonoBehaviour
     private void DoGround()
     {
         maxSpeed = 5;
-        airActions = 2;
-        if (!Physics2D.OverlapCircle(groundCheck.position + m_RigidBody.velocity.y * Vector3.up, checkRadius, whatIsGround))
+        // airActions = 2;
+        // if (!Physics2D.OverlapCircle(groundCheck.position + m_RigidBody.velocity.y * Vector3.up, checkRadius, whatIsGround))
+        if (m_RigidBody.velocity.y < -0.1)
         {
+            Debug.Log("nani");
             current_state = PlayerState.FALL;
             return;
         }
         if (Input.GetKeyDown(jumpKey))
         {
+            Debug.Log("grounded");
             current_state = PlayerState.FALL;
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
-            // Debug.Log("JUMP");
             return;
         }
-        if (Input.GetKeyDown(fallKey) && lastGround.name == "OneWay")
+        if (Input.GetKeyDown(fallKey) && lastGround.name.Contains("OneWay"))
         {
             current_state = PlayerState.FALL;
             StartCoroutine(FallThrough(lastGround));
@@ -166,6 +168,7 @@ public class PlayerController2 : MonoBehaviour
 
         if (Input.GetKeyDown(jumpKey) && airActions > 0)
         {
+            Debug.Log(airActions);
             airActions -= 1;
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, extraJumpValue);
         }
@@ -178,14 +181,20 @@ public class PlayerController2 : MonoBehaviour
     {
     }
 
+    // BUG: If you get too big, you never exit the one way platforms since they're all one collider.
+    // However, you end up not getting grounded either, while still standing on them.
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.tag != "Food" && m_RigidBody.velocity.y <= 0 && Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround))
+        if (other.collider.tag != "Food" &&
+                m_RigidBody.velocity.y <= 0 &&
+                other.GetContact(0).normal.y > 0)
         {
-            current_state = PlayerState.GROUND;
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
             Debug.Log("Landed" + Time.frameCount);
             lastGround = other.collider;
+            airActions = 2;
+            current_state = PlayerState.GROUND;
+            print(current_state);
         }
     }
 
