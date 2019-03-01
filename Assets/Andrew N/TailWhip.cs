@@ -1,22 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TailWhip : MonoBehaviour
 {
-
     public KeyCode whipAttack;
     public GameObject tail;
     private GameObject tailClone;
 
-    public float attackDuration = .03f;
+    public float attackDuration = .16f;
     private bool isAttacking = false;
     private float attackTimer = 0f;
     private Vector3 tempPosition;
+    private Vector3 tempScale;
+
+    private BoxCollider2D m_BoxCollider;
 
     // Start is called before the first frame update
     void Start()
     {
+        m_BoxCollider = this.GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -41,14 +45,22 @@ public class TailWhip : MonoBehaviour
             tempPosition = transform.position;
             if (transform.localScale.x < 0)
             {
-                tempPosition.x += 1;
+                tempPosition.x -= transform.localScale.y * 12;
             }
             else {
-                tempPosition.x -= 1;
+                tempPosition.x += transform.localScale.y * 12;
             }
+            tempPosition.y += transform.localScale.y * 7;
             tailClone = GameObject.Instantiate(tail, tempPosition, Quaternion.identity);
+            
+            // if (transform.localScale.x > 0)
+            // {
+            tempScale = transform.localScale;
+            tempScale.x *= -1;
+            tailClone.transform.localScale = tempScale * 10;
+            // }
+            Physics2D.IgnoreCollision(m_BoxCollider, tailClone.GetComponent<CircleCollider2D>());
         }
-
 
     }
 
