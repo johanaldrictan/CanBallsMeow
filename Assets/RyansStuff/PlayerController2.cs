@@ -16,6 +16,18 @@ public class PlayerController2 : MonoBehaviour
     // public float checkRadius = 0.5f;
     public LayerMask whatIsGround;
 
+    //For Dashing
+    public KeyCode left;
+    public KeyCode right;
+    public float dashSideForce = 300f;
+    public float dashUpForce = 100f;
+    public float timeForDash = 0.5f;
+    float dashTimer = 0f;
+    bool canDash = false;
+    KeyCode keyPressed;
+    //End
+
+
     public const float jumpSquat = 5; // frames. Melee Yoshi's.
 
     // private float moveInput;
@@ -63,6 +75,7 @@ public class PlayerController2 : MonoBehaviour
         // Drops inputs if in fixed update >:(
         if (Input.GetKeyDown(jumpKey)) {jumpQueued = true;}
         if (Input.GetKeyDown(fallKey)) {fallQueued = true;}
+        Dashing();
     }
 
     void FixedUpdate()
@@ -164,8 +177,61 @@ public class PlayerController2 : MonoBehaviour
         Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, false);
     }
 
+    void Dashing()
+    {
+        if (current_state != PlayerState.GROUND)
+            canDash = false;
+        if(canDash)
+        {
+            Dash();
+            dashTimer += Time.deltaTime;
+        }
+        StartDash();
+    }
+
+    void StartDash()
+    {
+        if(Input.GetKeyDown(left))
+        {
+            canDash = true;
+            keyPressed = left;
+        }
+        else if(Input.GetKeyDown(right))
+        {
+            canDash = true;
+            keyPressed = right;
+        }
+    }
+    void ResetDash()
+    {
+        canDash = false;
+        dashTimer = 0;
+    }
+
+    void Dash()
+    {
+        if(dashTimer > timeForDash)
+        {
+            ResetDash();
+        }
+        else
+        {
+            if(Input.GetKeyDown(keyPressed))
+            {
+                current_state = PlayerState.DASH;
+            }
+        }
+    }
+
     private void DoDash()
     {
+        Debug.Log("Dashing");
+        if (keyPressed == left)
+            m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce));
+        else
+            m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce));
+        ResetDash();
+        current_state = PlayerState.FALL;
     }
 
     private int unstuck_hack = 0;
