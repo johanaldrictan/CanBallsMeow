@@ -931,6 +931,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: xAxis
+      value: Horizontal
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: yAxis
+      value: Vertical
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: checkRadius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
+        type: 3}
+      propertyPath: fallKey
+      value: 115
+      objectReference: {fileID: 0}
     - target: {fileID: 9190746384851306968, guid: e4c29dfc7636657419edcfd0be33567a,
         type: 3}
       propertyPath: m_UseAutoMass
@@ -950,21 +970,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
-        type: 3}
-      propertyPath: xAxis
-      value: Horizontal
-      objectReference: {fileID: 0}
-    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
-        type: 3}
-      propertyPath: yAxis
-      value: Vertical
-      objectReference: {fileID: 0}
-    - target: {fileID: 3390076790972063195, guid: e4c29dfc7636657419edcfd0be33567a,
-        type: 3}
-      propertyPath: checkRadius
-      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 66455242148890799, guid: e4c29dfc7636657419edcfd0be33567a, type: 3}

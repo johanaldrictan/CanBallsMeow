@@ -127,13 +127,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee1b1c6b6d917e4fab226c99f1d60fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 8
-  extraJumpValue: 6
+  jumpForce: 12
+  shortJumpForce: 8
+  doubleJumpForce: 12
   jumpKey: 119
+  fallKey: 115
   xAxis: 
   yAxis: 
-  groundCheck: {fileID: 5509746613404627950}
-  checkRadius: 100
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
