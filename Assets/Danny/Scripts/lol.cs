@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class lol : MonoBehaviour
 {
     //dash variables
     [SerializeField] string playerName;
@@ -12,19 +12,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float timeForDash;
     [SerializeField] KeyCode left;
     [SerializeField] KeyCode right;
-    [SerializeField] KeyCode up;
-    [SerializeField] KeyCode down;
-    [SerializeField] KeyCode a;
-    [SerializeField] KeyCode b;
     public int startingJump = 7; //Default fatness that would get a good jump
     private int doubleJumpCounter = 0;
 
 
-    FoodCollector m_foodCollector;
+    private FoodCollector m_foodCollector;
+    //private Rigidbody2D m_RigidBody;
 
     CapsuleCollider2D m_CapsuleCollider;
     Rigidbody2D m_RigidBody;
-
 
     float dashTimer = 0f;
     bool canDash = false;
@@ -36,14 +32,14 @@ public class PlayerMovement : MonoBehaviour
     {
         m_foodCollector = GetComponent<FoodCollector>();
         m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
-        m_RigidBody = GetComponent<Rigidbody2D>();   
+        m_RigidBody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Movement();
-        if (Input.GetKeyDown(up))
+        if (Input.GetKeyDown("w"))
         {
             playerJump();
         }
@@ -62,16 +58,31 @@ public class PlayerMovement : MonoBehaviour
         FlipDirection(axis);
         if (!m_IsGrounded)
         {
-            if(m_RigidBody.velocity.x == 0)
+            if (m_RigidBody.velocity.x == 0)
             {
                 m_RigidBody.velocity = new Vector3(speed * axis, m_RigidBody.velocity.y);
+
             }
             else
+            {
                 m_RigidBody.velocity = new Vector3(Mathf.Abs(m_RigidBody.velocity.x) * axis, m_RigidBody.velocity.y);
+            }
         }
         else
         {
             m_RigidBody.velocity = new Vector3(speed * axis, m_RigidBody.velocity.y);
+        }
+    }
+
+    void FlipDirection(float rawAxis)
+    {
+        if (rawAxis < 0)
+        {
+            transform.rotation = Quaternion.identity;
+        }
+        if (rawAxis > 0)
+        {
+            transform.rotation = new Quaternion(0, -180, 0, 0);
         }
     }
 
@@ -89,12 +100,12 @@ public class PlayerMovement : MonoBehaviour
     void StartDash()
     {
 
-        if(Input.GetKeyDown(left))
+        if (Input.GetKeyDown(left))
         {
             canDash = true;
             keyPressed = left;
         }
-        else if(Input.GetKeyDown(right))
+        else if (Input.GetKeyDown(right))
         {
             canDash = true;
             keyPressed = right;
@@ -113,7 +124,9 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKeyDown(keyPressed))
             {
                 if (keyPressed == left)
+                {
                     m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce));
+                }
                 else
                     m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce));
                 ResetDash();
@@ -130,8 +143,10 @@ public class PlayerMovement : MonoBehaviour
     void CheckIfGrounded()
     {
 
-        Vector3 pos = m_CapsuleCollider.bounds.center + Vector3.down * m_CapsuleCollider.bounds.extents.y;
-        if(Physics2D.Raycast(pos, Vector3.down, 0.01f).collider != null)
+        Vector3 pos = transform.position + Vector3.down * m_CapsuleCollider.bounds.extents.y;
+        Debug.DrawLine(pos, pos + Vector3.down * 0.1f);
+        //Debug.Log(Physics2D.Raycast(pos, Vector3.down, 0.01f).transform.gameObject.name);
+        if (Physics2D.Raycast(pos, Vector3.down, 0.1f).collider != null)
         {
             m_IsGrounded = true;
             doubleJumpCounter = 0;
@@ -145,6 +160,8 @@ public class PlayerMovement : MonoBehaviour
 
     void playerJump()
     {
+        m_RigidBody = GetComponent<Rigidbody2D>();
+
         //First Jump Off Ground
         if (m_IsGrounded)
         {
@@ -161,19 +178,6 @@ public class PlayerMovement : MonoBehaviour
             m_RigidBody.velocity = velocity;
             m_RigidBody.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
             doubleJumpCounter += 1;
-        }
-    }
-
-
-    void FlipDirection(float rawAxis)
-    {
-        if (rawAxis < 0)
-        {
-            transform.rotation = Quaternion.identity;
-        }
-        if (rawAxis > 0)
-        {
-            transform.rotation = new Quaternion(0, -180, 0, 0);
         }
     }
 }
