@@ -24,7 +24,9 @@ public class PlayerController2 : MonoBehaviour
     public float timeForDash = 0.5f;
     float dashTimer = 0f;
     bool canDash = false;
+    bool dashing = false;
     KeyCode keyPressed;
+    public float maxDashSpeed = 12f;
     //End
 
 
@@ -57,8 +59,11 @@ public class PlayerController2 : MonoBehaviour
     private bool jumpQueued;
     private bool fallQueued;
 
+    Animator animator;
+
     void Start()
     {
+        //animator = GetComponent<Animator>();
         m_foodCollector = GetComponent<FoodCollector>();
         m_BoxCollider2D = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
@@ -76,6 +81,7 @@ public class PlayerController2 : MonoBehaviour
         if (Input.GetKeyDown(jumpKey)) {jumpQueued = true;}
         if (Input.GetKeyDown(fallKey)) {fallQueued = true;}
         Dashing();
+
     }
 
     void FixedUpdate()
@@ -88,7 +94,7 @@ public class PlayerController2 : MonoBehaviour
             case PlayerState.ATTACK : this.DoAttack(); break;
             case PlayerState.JUMP_SQUAT : this.DoJumpSquat(); break;
         }
-
+        //animator.SetBool("jump", false);
         // You can always drift.
         float axis = Input.GetAxisRaw(xAxis);
         if (axis != 0)
@@ -118,12 +124,18 @@ public class PlayerController2 : MonoBehaviour
     }
 
     private void ClampSpeed()
-    {  
+    {
         // Isn't making new objects every frame bad?
         Vector2 clamped = new Vector2(m_RigidBody.velocity.x, m_RigidBody.velocity.y);
-        clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
+        if(dashing)
+            clamped.x = Math.Min(this.maxDashSpeed, Math.Max(-this.maxDashSpeed, clamped.x));
+        else
+            clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
         clamped.y = Math.Max(-15, clamped.y); // TODO: Fix magic number
+        //animator.SetFloat("velX", clamped.x / maxSpeed);
+        //animator.SetFloat("velY", clamped.y);
         m_RigidBody.velocity = clamped;
+
     }
 
     // private PlayerState ChangeState(PlayerState value)
@@ -219,17 +231,18 @@ public class PlayerController2 : MonoBehaviour
             if(Input.GetKeyDown(keyPressed))
             {
                 current_state = PlayerState.DASH;
+                dashing = true;
             }
         }
     }
 
     private void DoDash()
     {
-        Debug.Log("Dashing");
+        //Debug.Log("Dashing");
         if (keyPressed == left)
-            m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce));
+            m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce), ForceMode2D.Impulse);
         else
-            m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce));
+            m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce), ForceMode2D.Impulse);
         ResetDash();
         current_state = PlayerState.FALL;
     }
@@ -247,7 +260,7 @@ public class PlayerController2 : MonoBehaviour
         if (jumpQueued && airActions > 0)
         {
             jumpQueued = false;
-            Debug.Log(airActions);
+            //Debug.Log(airActions);
             airActions -= 1;
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
         }
@@ -286,6 +299,7 @@ public class PlayerController2 : MonoBehaviour
                 m_RigidBody.velocity.x,
                 Input.GetKey(jumpKey) ? jumpForce : shortJumpForce
             );
+            //animator.SetBool("jump", true);
             return;
         }
     }
@@ -299,10 +313,11 @@ public class PlayerController2 : MonoBehaviour
                 other.GetContact(0).normal.y >= 0)
         {
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
-            Debug.Log("Landed" + Time.frameCount);
+            //Debug.Log("Landed" + Time.frameCount);
             lastGround = other.collider;
             airActions = 2;
             current_state = PlayerState.GROUND;
+            dashing = false;
         }
     }
 
