@@ -48,6 +48,7 @@ public class PlayerController2 : MonoBehaviour
     private BoxCollider2D m_BoxCollider2D;
     private Rigidbody2D m_RigidBody;
     private SpriteRenderer m_SpriteRenderer;
+    private CatAudio m_CatAudio;
 
     [SerializeField]
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
@@ -68,6 +69,7 @@ public class PlayerController2 : MonoBehaviour
         m_BoxCollider2D = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        m_CatAudio = GetComponent<CatAudio>();
 
         current_state = PlayerState.FALL;
 
@@ -167,6 +169,7 @@ public class PlayerController2 : MonoBehaviour
             // Debug.Log("grounded");
             current_state = PlayerState.JUMP_SQUAT;
             jumpSquatTimer = 0;
+            m_CatAudio.PlayCatMeow();
             return;
         }
         if (fallQueued && lastGround.name.Contains("OneWay"))
@@ -178,6 +181,7 @@ public class PlayerController2 : MonoBehaviour
             // Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, true);
             // m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
             // Debug.Log("JUMP");
+            m_CatAudio.PlayCatMeow();
             return;
         }
     }
@@ -287,6 +291,7 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoAttack()
     {
+        m_CatAudio.PlayCatAttack();
     }
 
     private void DoJumpSquat()
