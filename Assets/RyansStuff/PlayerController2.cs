@@ -64,7 +64,7 @@ public class PlayerController2 : MonoBehaviour
 
     void Start()
     {
-        //animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         m_foodCollector = GetComponent<FoodCollector>();
         m_BoxCollider2D = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
@@ -88,6 +88,8 @@ public class PlayerController2 : MonoBehaviour
 
     void FixedUpdate()
     {
+        animator.SetBool("jump", false);
+        animator.SetBool("dash", false);
         switch (current_state)
         {
             case PlayerState.GROUND : this.DoGround(); break;
@@ -96,7 +98,6 @@ public class PlayerController2 : MonoBehaviour
             case PlayerState.ATTACK : this.DoAttack(); break;
             case PlayerState.JUMP_SQUAT : this.DoJumpSquat(); break;
         }
-        //animator.SetBool("jump", false);
         // You can always drift.
         float axis = Input.GetAxisRaw(xAxis);
         if (axis != 0)
@@ -134,8 +135,8 @@ public class PlayerController2 : MonoBehaviour
         else
             clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
         clamped.y = Math.Max(-15, clamped.y); // TODO: Fix magic number
-        //animator.SetFloat("velX", clamped.x / maxSpeed);
-        //animator.SetFloat("velY", clamped.y);
+        animator.SetFloat("velX", clamped.x / maxSpeed);
+        animator.SetFloat("velY", clamped.y);
         m_RigidBody.velocity = clamped;
 
     }
@@ -247,6 +248,7 @@ public class PlayerController2 : MonoBehaviour
             m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce), ForceMode2D.Impulse);
         else
             m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce), ForceMode2D.Impulse);
+        animator.SetBool("dash", true);
         ResetDash();
         current_state = PlayerState.FALL;
     }
@@ -304,7 +306,7 @@ public class PlayerController2 : MonoBehaviour
                 m_RigidBody.velocity.x,
                 Input.GetKey(jumpKey) ? jumpForce : shortJumpForce
             );
-            //animator.SetBool("jump", true);
+            animator.SetBool("jump", true);
             return;
         }
     }
