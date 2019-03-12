@@ -19,6 +19,11 @@ public class FoodCollector : MonoBehaviour
     {
         catFatness += diff;
         transform.localScale *= catFatness / (catFatness - diff);
+        
+        // Everyone's favorite:
+        float magic_number = 0.0625f;
+
+        transform.position = transform.position + Vector3.up * magic_number * catFatness / (catFatness - diff);
         m_CatAudio.PlayCatEat();
         // OnSizeChange(catFatness, diff);
     }
