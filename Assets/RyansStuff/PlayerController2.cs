@@ -16,6 +16,20 @@ public class PlayerController2 : MonoBehaviour
     // public float checkRadius = 0.5f;
     public LayerMask whatIsGround;
 
+    //For Dashing
+    public KeyCode left;
+    public KeyCode right;
+    public float dashSideForce = 300f;
+    public float dashUpForce = 100f;
+    public float timeForDash = 0.5f;
+    float dashTimer = 0f;
+    bool canDash = false;
+    bool dashing = false;
+    KeyCode keyPressed;
+    public float maxDashSpeed = 12f;
+    //End
+
+
     public const float jumpSquat = 5; // frames. Melee Yoshi's.
 
     // private float moveInput;
@@ -34,6 +48,7 @@ public class PlayerController2 : MonoBehaviour
     private BoxCollider2D m_BoxCollider2D;
     private Rigidbody2D m_RigidBody;
     private SpriteRenderer m_SpriteRenderer;
+    private CatAudio m_CatAudio;
 
     [SerializeField]
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
@@ -45,12 +60,16 @@ public class PlayerController2 : MonoBehaviour
     private bool jumpQueued;
     private bool fallQueued;
 
+    Animator animator;
+
     void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         m_foodCollector = GetComponent<FoodCollector>();
         m_BoxCollider2D = GetComponent<BoxCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        m_CatAudio = GetComponent<CatAudio>();
 
         current_state = PlayerState.FALL;
 
@@ -63,10 +82,14 @@ public class PlayerController2 : MonoBehaviour
         // Drops inputs if in fixed update >:(
         if (Input.GetKeyDown(jumpKey)) {jumpQueued = true;}
         if (Input.GetKeyDown(fallKey)) {fallQueued = true;}
+        Dashing();
+
     }
 
     void FixedUpdate()
     {
+        animator.SetBool("jump", false);
+        animator.SetBool("dash", false);
         switch (current_state)
         {
             case PlayerState.GROUND : this.DoGround(); break;
@@ -75,7 +98,6 @@ public class PlayerController2 : MonoBehaviour
             case PlayerState.ATTACK : this.DoAttack(); break;
             case PlayerState.JUMP_SQUAT : this.DoJumpSquat(); break;
         }
-
         // You can always drift.
         float axis = Input.GetAxisRaw(xAxis);
         if (axis != 0)
@@ -105,12 +127,18 @@ public class PlayerController2 : MonoBehaviour
     }
 
     private void ClampSpeed()
-    {  
+    {
         // Isn't making new objects every frame bad?
         Vector2 clamped = new Vector2(m_RigidBody.velocity.x, m_RigidBody.velocity.y);
-        clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
+        if(dashing)
+            clamped.x = Math.Min(this.maxDashSpeed, Math.Max(-this.maxDashSpeed, clamped.x));
+        else
+            clamped.x = Math.Min(this.maxSpeed, Math.Max(-this.maxSpeed, clamped.x));
         clamped.y = Math.Max(-15, clamped.y); // TODO: Fix magic number
+        animator.SetFloat("velX", clamped.x / maxSpeed);
+        animator.SetFloat("velY", clamped.y);
         m_RigidBody.velocity = clamped;
+
     }
 
     // private PlayerState ChangeState(PlayerState value)
@@ -142,6 +170,7 @@ public class PlayerController2 : MonoBehaviour
             // Debug.Log("grounded");
             current_state = PlayerState.JUMP_SQUAT;
             jumpSquatTimer = 0;
+            m_CatAudio.PlayCatMeow();
             return;
         }
         if (fallQueued && lastGround.name.Contains("OneWay"))
@@ -153,6 +182,7 @@ public class PlayerController2 : MonoBehaviour
             // Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, true);
             // m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, jumpForce);
             // Debug.Log("JUMP");
+            m_CatAudio.PlayCatMeow();
             return;
         }
     }
@@ -164,8 +194,63 @@ public class PlayerController2 : MonoBehaviour
         Physics2D.IgnoreCollision(lastGround, this.m_BoxCollider2D, false);
     }
 
+    void Dashing()
+    {
+        if (current_state != PlayerState.GROUND)
+            canDash = false;
+        if(canDash)
+        {
+            Dash();
+            dashTimer += Time.deltaTime;
+        }
+        StartDash();
+    }
+
+    void StartDash()
+    {
+        if(Input.GetKeyDown(left))
+        {
+            canDash = true;
+            keyPressed = left;
+        }
+        else if(Input.GetKeyDown(right))
+        {
+            canDash = true;
+            keyPressed = right;
+        }
+    }
+    void ResetDash()
+    {
+        canDash = false;
+        dashTimer = 0;
+    }
+
+    void Dash()
+    {
+        if(dashTimer > timeForDash)
+        {
+            ResetDash();
+        }
+        else
+        {
+            if(Input.GetKeyDown(keyPressed))
+            {
+                current_state = PlayerState.DASH;
+                dashing = true;
+            }
+        }
+    }
+
     private void DoDash()
     {
+        //Debug.Log("Dashing");
+        if (keyPressed == left)
+            m_RigidBody.AddForce(new Vector2(-dashSideForce, dashUpForce), ForceMode2D.Impulse);
+        else
+            m_RigidBody.AddForce(new Vector2(dashSideForce, dashUpForce), ForceMode2D.Impulse);
+        animator.SetBool("dash", true);
+        ResetDash();
+        current_state = PlayerState.FALL;
     }
 
     private int unstuck_hack = 0;
@@ -181,7 +266,7 @@ public class PlayerController2 : MonoBehaviour
         if (jumpQueued && airActions > 0)
         {
             jumpQueued = false;
-            Debug.Log(airActions);
+            //Debug.Log(airActions);
             airActions -= 1;
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, doubleJumpForce);
         }
@@ -208,6 +293,7 @@ public class PlayerController2 : MonoBehaviour
 
     private void DoAttack()
     {
+        m_CatAudio.PlayCatAttack();
     }
 
     private void DoJumpSquat()
@@ -220,6 +306,7 @@ public class PlayerController2 : MonoBehaviour
                 m_RigidBody.velocity.x,
                 Input.GetKey(jumpKey) ? jumpForce : shortJumpForce
             );
+            animator.SetBool("jump", true);
             return;
         }
     }
@@ -233,10 +320,11 @@ public class PlayerController2 : MonoBehaviour
                 other.GetContact(0).normal.y >= 0)
         {
             m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0);
-            Debug.Log("Landed" + Time.frameCount);
+            //Debug.Log("Landed" + Time.frameCount);
             lastGround = other.collider;
             airActions = 2;
             current_state = PlayerState.GROUND;
+            dashing = false;
         }
     }
 

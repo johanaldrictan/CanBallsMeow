@@ -5,22 +5,26 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     //dash variables
+    [SerializeField] string playerName;
     [SerializeField] float speed;
     [SerializeField] float dashSideForce;
     [SerializeField] float dashUpForce;
     [SerializeField] float timeForDash;
     [SerializeField] KeyCode left;
     [SerializeField] KeyCode right;
+    [SerializeField] KeyCode up;
+    [SerializeField] KeyCode down;
+    [SerializeField] KeyCode a;
+    [SerializeField] KeyCode b;
     public int startingJump = 7; //Default fatness that would get a good jump
     private int doubleJumpCounter = 0;
 
 
-    private FoodCollector m_foodCollector;
-    private Rigidbody2D rb;
-    private CircleCollider2D cc;
+    FoodCollector m_foodCollector;
 
-    CircleCollider2D m_CircleCollider;
+    CapsuleCollider2D m_CapsuleCollider;
     Rigidbody2D m_RigidBody;
+
 
     float dashTimer = 0f;
     bool canDash = false;
@@ -31,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         m_foodCollector = GetComponent<FoodCollector>();
-        m_CircleCollider = GetComponent<CircleCollider2D>();
+        m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
         m_RigidBody = GetComponent<Rigidbody2D>();   
     }
 
@@ -39,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Movement();
-        if (Input.GetKeyDown("w"))
+        if (Input.GetKeyDown(up))
         {
             playerJump();
         }
@@ -54,10 +58,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        float axis = Input.GetAxisRaw("Horizontal");
+        float axis = Input.GetAxisRaw(playerName + "Horizontal");
+        FlipDirection(axis);
         if (!m_IsGrounded)
         {
-            m_RigidBody.velocity = new Vector3(Mathf.Abs(m_RigidBody.velocity.x) * axis, m_RigidBody.velocity.y);
+            if(m_RigidBody.velocity.x == 0)
+            {
+                m_RigidBody.velocity = new Vector3(speed * axis, m_RigidBody.velocity.y);
+            }
+            else
+                m_RigidBody.velocity = new Vector3(Mathf.Abs(m_RigidBody.velocity.x) * axis, m_RigidBody.velocity.y);
         }
         else
         {
@@ -120,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
     void CheckIfGrounded()
     {
 
-        Vector3 pos = transform.position + Vector3.down * m_CircleCollider.bounds.extents.y;
+        Vector3 pos = m_CapsuleCollider.bounds.center + Vector3.down * m_CapsuleCollider.bounds.extents.y;
         if(Physics2D.Raycast(pos, Vector3.down, 0.01f).collider != null)
         {
             m_IsGrounded = true;
@@ -135,12 +145,10 @@ public class PlayerMovement : MonoBehaviour
 
     void playerJump()
     {
-        rb = GetComponent<Rigidbody2D>();
-
         //First Jump Off Ground
         if (m_IsGrounded)
         {
-            rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
+            m_RigidBody.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
             doubleJumpCounter += 1;
             //print(doubleJumpCounter);
         }
@@ -148,11 +156,24 @@ public class PlayerMovement : MonoBehaviour
         //Double Jump
         else if ((!m_IsGrounded) && doubleJumpCounter < 2)
         {
-            Vector3 velocity = rb.velocity;
+            Vector3 velocity = m_RigidBody.velocity;
             velocity.y = 0;
-            rb.velocity = velocity;
-            rb.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
+            m_RigidBody.velocity = velocity;
+            m_RigidBody.AddForce(new Vector2(0, startingJump - (.2f * m_foodCollector.catFatness)), ForceMode2D.Impulse);
             doubleJumpCounter += 1;
+        }
+    }
+
+
+    void FlipDirection(float rawAxis)
+    {
+        if (rawAxis < 0)
+        {
+            transform.rotation = Quaternion.identity;
+        }
+        if (rawAxis > 0)
+        {
+            transform.rotation = new Quaternion(0, -180, 0, 0);
         }
     }
 }

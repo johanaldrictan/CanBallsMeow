@@ -7,16 +7,19 @@ public class FoodCollector : MonoBehaviour
 {
     public float catFatness = 1; // 100%
     // Rigidbody2D my_rigidbody;
+    private CatAudio m_CatAudio;
 
     void Start()
     {
         // my_rigidbody = this.GetComponent<Rigidbody2D>();
+        m_CatAudio = GetComponent<CatAudio>();
     }
 
     public void HandleFood(float diff)
     {
         catFatness += diff;
         transform.localScale *= catFatness / (catFatness - diff);
+        m_CatAudio.PlayCatEat();
         // OnSizeChange(catFatness, diff);
     }
 
