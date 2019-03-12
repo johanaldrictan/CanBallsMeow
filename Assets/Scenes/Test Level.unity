@@ -1472,6 +1472,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.043060295
       objectReference: {fileID: 0}
+    - target: {fileID: 7134697752052527937, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7134697751462001721, guid: 4d6c64fcc0890124a8a9145a2ec10984,
         type: 3}
       propertyPath: m_LocalRotation.z

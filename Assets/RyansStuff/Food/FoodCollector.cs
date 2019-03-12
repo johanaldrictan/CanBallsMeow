@@ -24,6 +24,7 @@ public class FoodCollector : MonoBehaviour
 
         catFatness += diff;
         transform.localScale *= catFatness / (catFatness - diff);
+        GameObject.Find("bone_4").transform.localScale *= (catFatness - diff) / catFatness;
         
         // Everyone's favorite:
         float magic_number = 0.0625f;
