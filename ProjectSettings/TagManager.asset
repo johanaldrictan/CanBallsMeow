@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Food
   - Hazard
+  - Death
   layers:
   - Default
   - TransparentFX

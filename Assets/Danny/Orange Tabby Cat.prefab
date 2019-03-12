@@ -492,11 +492,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7134697750952699861}
   - component: {fileID: 7134697750952699857}
-  - component: {fileID: 7134697750952699858}
   - component: {fileID: 7134697750952699859}
   - component: {fileID: 3497637851815979838}
   - component: {fileID: 5871214311575494296}
   - component: {fileID: 717594804766605906}
+  - component: {fileID: 2489532322963237283}
   m_Layer: 8
   m_Name: Orange Tabby Cat
   m_TagString: Untagged
@@ -547,23 +547,10 @@ MonoBehaviour:
   dashUpForce: 3
   timeForDash: 0.5
   maxDashSpeed: 12
+  stocks: 3
+  vcam: {fileID: 0}
+  vgroup: {fileID: 0}
   current_state: 0
---- !u!70 &7134697750952699858
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7134697750952699865}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 42f902600e06540afa54ab64946cd497, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.06675415, y: 0.044113494}
-  m_Size: {x: 5.7996674, y: 3.9303868}
-  m_Direction: 1
 --- !u!50 &7134697750952699859
 Rigidbody2D:
   serializedVersion: 4
@@ -712,6 +699,32 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 06518870a359c6946b103364ad37528d, type: 3}
   - {fileID: 8300000, guid: 513ddd50da91502459aba4c4ab207add, type: 3}
   CatAttack: {fileID: 8300000, guid: f69a3a0a448d3604f98cfc3438ad688b, type: 3}
+--- !u!61 &2489532322963237283
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7134697750952699865}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.25339687, y: 0.17661}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 6.0932055, y: 4.086836}
+  m_EdgeRadius: 0
 --- !u!1 &7134697751029965911
 GameObject:
   m_ObjectHideFlags: 0
