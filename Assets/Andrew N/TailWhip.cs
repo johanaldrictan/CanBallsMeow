@@ -45,19 +45,19 @@ public class TailWhip : MonoBehaviour
             tempPosition = transform.position;
             if (transform.localScale.x < 0)
             {
-                tempPosition.x -= transform.localScale.y * 12;
+                tempPosition.x -= transform.localScale.y * 4;
             }
             else {
-                tempPosition.x += transform.localScale.y * 12;
+                tempPosition.x += transform.localScale.y * 4;
             }
-            tempPosition.y += transform.localScale.y * 7;
+            tempPosition.y += transform.localScale.y * 2;
             tailClone = GameObject.Instantiate(tail, tempPosition, Quaternion.identity);
             
             // if (transform.localScale.x > 0)
             // {
             tempScale = transform.localScale;
             tempScale.x *= -1;
-            tailClone.transform.localScale = tempScale * 10;
+            tailClone.transform.localScale = tempScale * 5;
             // }
             Physics2D.IgnoreCollision(m_BoxCollider, tailClone.GetComponent<CircleCollider2D>());
         }
