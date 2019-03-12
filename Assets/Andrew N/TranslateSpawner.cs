@@ -18,12 +18,10 @@ public class TranslateSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Hover upwards if less than a certain distance from original
         if ((transform.position.x < (originalPosition.x + horizontalTranslateRange)) && translateRighBool)
         {
             transform.Translate(Vector2.right * Time.deltaTime);
         }
-        //Hover downwards if less than a certain distance from original
         else
         {
             translateRighBool = false;

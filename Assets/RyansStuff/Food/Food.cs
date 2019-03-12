@@ -7,15 +7,16 @@ using UnityEngine;
 public class Food : MonoBehaviour
 { 
     public float foodValue = 0.1f;
+    public bool dontDestroy = false;
 
     // private static float gravity = 0.5f; // Unity Units per second^2
     // private float velY = 0; // Unity Units per second
-    // private Rigidbody2D m_Rigidbody2D;
+    private CircleCollider2D m_CircleCollider;
 
-    // void Start()
-    // {
-    //     this.m_Rigidbody2D = this.GetComponent<Rigidbody2D>();
-    // }
+    void Start()
+    {
+        this.m_CircleCollider = this.GetComponent<CircleCollider2D>();
+    }
 
     // void FixedUpdate()
     // {
@@ -40,7 +41,14 @@ public class Food : MonoBehaviour
         if (foodCollector != null)
         {
             foodCollector.HandleFood(this.foodValue);
-            Object.Destroy(this.gameObject);
+            if (!dontDestroy)
+            {
+                Object.Destroy(this.gameObject);
+            }
+            else
+            {
+                Physics2D.IgnoreCollision(this.m_CircleCollider, other.collider);
+            }
         }
 
         // Stick to a floor. Dunno if people want this, but why not.
