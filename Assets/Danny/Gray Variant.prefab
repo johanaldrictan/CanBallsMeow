@@ -428,6 +428,16 @@ PrefabInstance:
       propertyPath: whipAttack
       value: 59
       objectReference: {fileID: 0}
+    - target: {fileID: 1878380085074662003, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: text
+      value: Player 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4151070531447969849, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: text
+      value: Player 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d6c64fcc0890124a8a9145a2ec10984, type: 3}
 --- !u!4 &4892763483371599382 stripped
