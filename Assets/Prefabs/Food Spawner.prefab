@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f314e205b9a8b646a60b3894a12a044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  food1: {fileID: 1233487321325518, guid: 2465eb453d42159478ce8debb08eb560, type: 3}
-  food2: {fileID: 1715810927982624, guid: e156485b08ae50441ada80c72ab56f28, type: 3}
-  food3: {fileID: 1150834040568152, guid: 04c9071a1eb07c142a412de52c0ad4f0, type: 3}
-  food4: {fileID: 1049602588594778, guid: a3b4d2590aaafac4fa078322a967315f, type: 3}
+  foodTypes:
+  - {fileID: 3360978380416196031, guid: dd624d8a0c35a404c9f03120f353ae6d, type: 3}
+  - {fileID: 8117764109992850722, guid: 52356239054c31e4287449c46bb3b443, type: 3}
+  - {fileID: 8623713902035772262, guid: 5d35a61ead3809e4986d19447d8f67c3, type: 3}
 --- !u!114 &4024864393134943021
 MonoBehaviour:
   m_ObjectHideFlags: 0
