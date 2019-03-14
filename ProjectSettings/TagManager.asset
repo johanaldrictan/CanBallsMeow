@@ -8,6 +8,7 @@ TagManager:
   - Hazard
   - Player 1
   - Player 2
+  - Death
   layers:
   - Default
   - TransparentFX
