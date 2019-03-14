@@ -68,10 +68,6 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(extraJumps);
             isGrounded = false;
         }
-        else if (Input.GetKeyDown(jumpKey) && extraJumps == 0 && isGrounded == true)
-        {
-            rb.velocity = Vector2.up * jumpForce;
-        }
 
 
         if (Input.GetKey(rotateLeft) && isGrounded == false)

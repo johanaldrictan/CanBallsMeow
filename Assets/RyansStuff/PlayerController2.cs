@@ -28,6 +28,9 @@ public class PlayerController2 : MonoBehaviour
     bool dashing = false;
     KeyCode keyPressed;
     public float maxDashSpeed = 12f;
+
+    public int stocks;
+    private AudioSource catDeathAudio;
     //End
 
 
@@ -48,7 +51,7 @@ public class PlayerController2 : MonoBehaviour
 
     ///////////////////////////////////////////////////////////
 
-    enum PlayerState {GROUND, DASH, FALL, ATTACK, JUMP_SQUAT}
+    enum PlayerState {GROUND, DASH, FALL, ATTACK, JUMP_SQUAT, DEATH}
 
     // private Rigidbody2D rb;
     // private CircleCollider2D cc;
@@ -71,6 +74,9 @@ public class PlayerController2 : MonoBehaviour
 
     Animator animator;
 
+    public CinemachineVirtualCamera vcam;
+    public CinemachineTargetGroup vgroup;
+
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
@@ -86,7 +92,8 @@ public class PlayerController2 : MonoBehaviour
         // TODO: In merge, replace variable in prefab, instead of doing this junk
         m_RigidBody.gravityScale = 2;
 
-        //Check Cinemachine
+        stocks = 3;
+
         if (GameObject.Find("CM vcam1") != null)
         {
             vcam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
@@ -97,7 +104,7 @@ public class PlayerController2 : MonoBehaviour
             vgroup = GameObject.Find("TargetGroup1").GetComponent<CinemachineTargetGroup>();
         }
 
-        //StartCoroutine(DoDeath());
+        catDeathAudio = GameObject.Find("CatDeathAudio").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -120,6 +127,8 @@ public class PlayerController2 : MonoBehaviour
             case PlayerState.FALL : this.DoFall(); break;
             case PlayerState.ATTACK : this.DoAttack(); break;
             case PlayerState.JUMP_SQUAT : this.DoJumpSquat(); break;
+            case PlayerState.DEATH: this.DoDeath(); break;
+            
         }
         // You can always drift.
         float axis = Input.GetAxisRaw(xAxis);
@@ -353,38 +362,40 @@ public class PlayerController2 : MonoBehaviour
 
     void DoDeath()
     {
-        print("DYING");
-        blockDeathEvent = true;
+        //SpriteRenderer sr = player.GetComponentInChildren<SpriteRenderer>();
         stocks -= 1;
+        print(stocks);
         if (stocks <= 0)
         {
+            catDeathAudio.Play();
             Destroy(gameObject);
         }
         else
         {
-                
-            sr.enabled = false;
             vcam.LookAt = null;
-            //yield return new WaitForSeconds(0.2f);
-            Invoke("Respawn", .2f);
+            m_foodCollector.catFatness = 1;
+            transform.localScale = new Vector3(0.2986914f, 0.2986914f, 0.2986914f);
+            m_CatAudio.PlayCatDeath();
+            respawn();
+            vcam.LookAt = vgroup.transform;
         }
     }
 
-    void Respawn()
+    void respawn()
     {
-        transform.position = respawnPosition;
-        transform.rotation = Quaternion.identity;
-        sr.enabled = true;
-        vcam.LookAt = vgroup.transform;
+        current_state = PlayerState.FALL;
+        transform.position = new Vector3(-0.1098735f, 10, 0);
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.CompareTag("Death"))
+
+        if (collision.CompareTag("Death"))
         {
-            Invoke("DoDeath", 0);
+            print(this.name);
+            current_state = PlayerState.DEATH;
         }
     }
-}
 
     // void OnCollisionExit2D(Collision2D other)
     // {

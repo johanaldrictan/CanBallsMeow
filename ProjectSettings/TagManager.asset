@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Food
+  - Hazard
+  - Player 1
+  - Player 2
+  - Death
   layers:
   - Default
   - TransparentFX
