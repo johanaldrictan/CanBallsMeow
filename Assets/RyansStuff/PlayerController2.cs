@@ -358,11 +358,13 @@ public class PlayerController2 : MonoBehaviour
         stocks -= 1;
         if (stocks <= 0)
         {
+            GameObject.Find("CatDeathAudio").GetComponent<AudioSource>().Play();
             Destroy(gameObject);
         }
         else
         {
-                
+            m_CatAudio.PlayCatDeath();
+            transform.localScale = new Vector3(0.2986914f, 0.2986914f, 0.2986914f);
             sr.enabled = false;
             vcam.LookAt = null;
             //yield return new WaitForSeconds(0.2f);
