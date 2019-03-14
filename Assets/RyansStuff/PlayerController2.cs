@@ -125,7 +125,7 @@ public class PlayerController2 : MonoBehaviour
         float axis = Input.GetAxisRaw(xAxis);
         if (axis != 0)
         {
-            m_RigidBody.AddForce(Vector2.right * Math.Sign(axis) * 5, ForceMode2D.Impulse);
+            m_RigidBody.AddForce(Vector2.right * Math.Sign(axis) * 3, ForceMode2D.Impulse);
             if (current_state == PlayerState.GROUND)
             {
                 float scaleFactor = transform.localScale.y;
@@ -135,7 +135,7 @@ public class PlayerController2 : MonoBehaviour
         else
         {
             Vector2 old_vel = m_RigidBody.velocity;
-            m_RigidBody.velocity = Vector2.left * Math.Sign(m_RigidBody.velocity.x) * 0.7f + m_RigidBody.velocity;
+            m_RigidBody.velocity = Vector2.left * Math.Sign(m_RigidBody.velocity.x) * 0.2f + m_RigidBody.velocity;
             if (old_vel.x * m_RigidBody.velocity.x < 0)
             {
                 m_RigidBody.velocity = new Vector2(0, m_RigidBody.velocity.y);

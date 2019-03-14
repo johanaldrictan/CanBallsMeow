@@ -16,11 +16,13 @@ public class TailWhip : MonoBehaviour
     private Vector3 tempScale;
 
     private BoxCollider2D m_BoxCollider;
+    private FoodCollector m_FoodCollector;
 
     // Start is called before the first frame update
     void Start()
     {
         m_BoxCollider = this.GetComponent<BoxCollider2D>();
+        m_FoodCollector = this.GetComponent<FoodCollector>();
     }
 
     // Update is called once per frame
@@ -45,18 +47,18 @@ public class TailWhip : MonoBehaviour
             tempPosition = transform.position;
             if (transform.localScale.x < 0)
             {
-                tempPosition.x -= transform.localScale.y * 4;
-            }
-            else {
                 tempPosition.x += transform.localScale.y * 4;
             }
-            tempPosition.y += transform.localScale.y * 2;
+            else {
+                tempPosition.x -= transform.localScale.y * 4;
+            }
+            tempPosition.y += transform.localScale.y * 1;
             tailClone = GameObject.Instantiate(tail, tempPosition, Quaternion.identity);
-            
+            tailClone.GetComponent<Hitbox>().creatorFatness = m_FoodCollector.catFatness * -150;
             // if (transform.localScale.x > 0)
             // {
             tempScale = transform.localScale;
-            tempScale.x *= -1;
+            // tempScale.x *= -1;
             tailClone.transform.localScale = tempScale * 5;
             // }
             Physics2D.IgnoreCollision(m_BoxCollider, tailClone.GetComponent<CircleCollider2D>());
@@ -66,9 +68,9 @@ public class TailWhip : MonoBehaviour
 
     private void flip()
     {
-        Vector3 theScale = transform.localScale;
+        Vector3 theScale = transform.Find("Animation").localScale;
         theScale.x *= -1;
-        transform.localScale = theScale; // flip
+        transform.Find("Animation").localScale = theScale; // flip
     }
 
 

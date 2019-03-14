@@ -40,7 +40,8 @@ public class Food : MonoBehaviour
         FoodCollector foodCollector = other.collider.GetComponent<FoodCollector>();
         if (foodCollector != null)
         {
-            foodCollector.HandleFood(this.foodValue);
+            Hitbox hitbox = GetComponent<Hitbox>();
+            foodCollector.HandleFood(this.foodValue, hitbox == null ? 0 : hitbox.creatorFatness * transform.localScale.x);
             if (!dontDestroy)
             {
                 Object.Destroy(this.gameObject);
