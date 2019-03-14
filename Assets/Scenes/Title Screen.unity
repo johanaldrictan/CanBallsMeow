@@ -7205,8 +7205,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12.26, y: -258.7}
-  m_SizeDelta: {x: 224.5, y: 714.6}
+  m_AnchoredPosition: {x: -12.26, y: -306.8}
+  m_SizeDelta: {x: 224.5, y: 811.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008103739
 MonoBehaviour:
@@ -7228,19 +7228,20 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Team Members:
+  m_text: 'UCI VGDC Winter 2018-2019
+
+
+    Team Members:
 
     Andrew Nguyen
 
     Andrew Park
 
-    [Name 3]
+    Danny Qi
 
     Johan Tan
 
-    [Name 5]
-
-    [Name 6]
+    Ryan C
 
 
     Team Lead:
@@ -7250,34 +7251,32 @@ MonoBehaviour:
 
     Programmers:
 
-    [Name 1]
+    Andrew Nguyen
 
     Andrew Park
 
-    [Name 3]
+    Armando Torres
 
-    [Name 4]
+    Ryan C
 
 
     Audio:
 
     Johan Tan
 
-    [Name 2]
-
 
     Animation:
 
     Andrew Park
 
-    [Name 2]
+    Danny Qi
 
 
     Art:
 
-    [Name 1]
+    John C
 
-    [Name 2]
+    halcyonn
 
     Andrew Park
 
