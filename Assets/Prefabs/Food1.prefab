@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 6029754485220925362, guid: f35a3f699b7a19e4e8e1dba99a0e92a4,
         type: 3}
       propertyPath: m_Name
-      value: Pizza
+      value: Food1
       objectReference: {fileID: 0}
     - target: {fileID: 6029754485220925369, guid: f35a3f699b7a19e4e8e1dba99a0e92a4,
         type: 3}
@@ -71,7 +71,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e64ab3691eaedd64f81ca97d8a3ba374,
+      objectReference: {fileID: 21300000, guid: 7d55a0d07174c284f8a5aa1f337cb39e,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f35a3f699b7a19e4e8e1dba99a0e92a4, type: 3}
