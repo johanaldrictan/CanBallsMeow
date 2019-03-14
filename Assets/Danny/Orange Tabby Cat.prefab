@@ -38,7 +38,7 @@ Transform:
   - {fileID: 7134697750792423503}
   - {fileID: 7134697750498347649}
   m_Father: {fileID: 7134697750952699861}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3433957822637513878
 SpriteRenderer:
@@ -188,7 +188,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7134697750952699861}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4151070531447969849
 MonoBehaviour:
@@ -566,8 +566,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2986914, y: 0.2986914, z: 0.2986914}
   m_Children:
-  - {fileID: 8835258650591557142}
   - {fileID: 7437102919115669710}
+  - {fileID: 8835258650591557142}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

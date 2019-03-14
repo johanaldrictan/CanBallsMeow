@@ -8,11 +8,13 @@ public class FoodCollector : MonoBehaviour
     public float catFatness = 1; // 100%
     // Rigidbody2D my_rigidbody;
     private CatAudio m_CatAudio;
+    private Transform headTransform;
 
     void Start()
     {
         // my_rigidbody = this.GetComponent<Rigidbody2D>();
         m_CatAudio = GetComponent<CatAudio>();
+        headTransform = transform.Find("Animation/bone_1/bone_2/bone_3/bone_4");
     }
 
     public void HandleFood(float diff)
@@ -24,8 +26,10 @@ public class FoodCollector : MonoBehaviour
 
         catFatness += diff;
         transform.localScale *= catFatness / (catFatness - diff);
-        GameObject.Find("bone_4").transform.localScale *= (catFatness - diff) / catFatness;
-        
+        headTransform.localScale *= (catFatness - diff * 0.5f) / catFatness;
+        // print(headTransform.lossyScale);
+        // It actually keeps relative size well, but an illusion makes it look like its shrinking.
+
         // Everyone's favorite:
         float magic_number = 0.0625f;
 
