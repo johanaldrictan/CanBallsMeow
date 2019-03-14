@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController2 : MonoBehaviour
 {
@@ -31,6 +32,14 @@ public class PlayerController2 : MonoBehaviour
 
 
     public const float jumpSquat = 5; // frames. Melee Yoshi's.
+
+    //For Death, Stocks, and Respawning
+    private Vector3 respawnPosition = new Vector3(-0.11f, 10, 0);
+    private bool blockDeathEvent = true; //To make sure DieAndRespawn() doesn't continually get called. Will later move from Update() to only fire on event
+    public int stocks = 3; // 9 if we wanna be techinically correct
+    SpriteRenderer sr; //To hide the game object when they are KOd and to render them again when they respawn.
+    public CinemachineVirtualCamera vcam;
+    public CinemachineTargetGroup vgroup;
 
     // private float moveInput;
     // private Rigidbody2D rb;
@@ -70,11 +79,25 @@ public class PlayerController2 : MonoBehaviour
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         m_CatAudio = GetComponent<CatAudio>();
+        sr = GetComponentInChildren<SpriteRenderer>();
 
         current_state = PlayerState.FALL;
 
         // TODO: In merge, replace variable in prefab, instead of doing this junk
         m_RigidBody.gravityScale = 2;
+
+        //Check Cinemachine
+        if (GameObject.Find("CM vcam1") != null)
+        {
+            vcam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
+        }
+
+        if (GameObject.Find("TargetGroup1") != null)
+        {
+            vgroup = GameObject.Find("TargetGroup1").GetComponent<CinemachineTargetGroup>();
+        }
+
+        //StartCoroutine(DoDeath());
     }
 
     void Update()
@@ -328,6 +351,41 @@ public class PlayerController2 : MonoBehaviour
         }
     }
 
+    void DoDeath()
+    {
+        print("DYING");
+        blockDeathEvent = true;
+        stocks -= 1;
+        if (stocks <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+                
+            sr.enabled = false;
+            vcam.LookAt = null;
+            //yield return new WaitForSeconds(0.2f);
+            Invoke("Respawn", .2f);
+        }
+    }
+
+    void Respawn()
+    {
+        transform.position = respawnPosition;
+        transform.rotation = Quaternion.identity;
+        sr.enabled = true;
+        vcam.LookAt = vgroup.transform;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Death"))
+        {
+            Invoke("DoDeath", 0);
+        }
+    }
+}
+
     // void OnCollisionExit2D(Collision2D other)
     // {
     //     if (lastGround == other.collider)
@@ -336,4 +394,3 @@ public class PlayerController2 : MonoBehaviour
     //         lastGround = null;
     //     }        
     // }
-}
