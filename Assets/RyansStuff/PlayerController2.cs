@@ -367,6 +367,8 @@ public class PlayerController2 : MonoBehaviour
         else
         {
             m_CatAudio.PlayCatDeath();
+            m_foodCollector.catFatness = 1;
+            m_foodCollector.OnSizeChange(m_foodCollector.catFatness);
             transform.localScale = new Vector3(0.2986914f, 0.2986914f, 0.2986914f);
             sr.enabled = false;
             vcam.LookAt = null;

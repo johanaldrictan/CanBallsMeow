@@ -52,10 +52,10 @@ public class FoodCollector : MonoBehaviour
         }
 
         print(catFatness);
-        OnSizeChange(catFatness, diff);
+        OnSizeChange(catFatness);
     }
 
-    public void OnSizeChange(float currentFatness, float deltaFatness)
+    public void OnSizeChange(float currentFatness)
     {
         //print(transform.localScale);
         fatness.text = (currentFatness * 100) + "%";
