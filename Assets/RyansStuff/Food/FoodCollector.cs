@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(TextMeshProUGUI))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class FoodCollector : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class FoodCollector : MonoBehaviour
     private CatAudio m_CatAudio;
     private Transform headTransform;
     private Rigidbody2D m_RigidBody;
+
+    public TextMeshProUGUI fatness; 
 
     void Start()
     {
@@ -48,12 +52,12 @@ public class FoodCollector : MonoBehaviour
         }
 
         print(catFatness);
-        // OnSizeChange(catFatness, diff);
+        OnSizeChange(catFatness, diff);
     }
 
-    // public void OnSizeChange(float currentFatness, float deltaFatness)
-    // {
-    //     print(transform.localScale);
-    //     // GameObject.Find("Fatness").GetComponent<UnityEngine.UI.Text>().text = (currentFatness * 100) + "%";
-    // }
+    public void OnSizeChange(float currentFatness, float deltaFatness)
+    {
+        //print(transform.localScale);
+        fatness.text = (currentFatness * 100) + "%";
+    }
 }
