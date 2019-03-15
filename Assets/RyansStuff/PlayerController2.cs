@@ -41,6 +41,8 @@ public class PlayerController2 : MonoBehaviour
     public CinemachineVirtualCamera vcam;
     public CinemachineTargetGroup vgroup;
 
+    public bool isAlive = true;
+
     // private float moveInput;
     // private Rigidbody2D rb;
     // private bool isGrounded;
@@ -358,8 +360,9 @@ public class PlayerController2 : MonoBehaviour
         stocks -= 1;
         if (stocks <= 0)
         {
+            isAlive = false;
             GameObject.Find("CatDeathAudio").GetComponent<AudioSource>().Play();
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
         else
         {
