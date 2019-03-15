@@ -60,6 +60,7 @@ public class PlayerController2 : MonoBehaviour
     private Rigidbody2D m_RigidBody;
     private SpriteRenderer m_SpriteRenderer;
     private CatAudio m_CatAudio;
+    private StockController stockController;
 
     [SerializeField]
     private PlayerState current_state; // {get => current_state; set => current_state = ChangeState(value);}
@@ -82,6 +83,7 @@ public class PlayerController2 : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         m_CatAudio = GetComponent<CatAudio>();
         sr = GetComponentInChildren<SpriteRenderer>();
+        stockController = GetComponent<StockController>();
 
         current_state = PlayerState.FALL;
 
@@ -358,6 +360,7 @@ public class PlayerController2 : MonoBehaviour
         print("DYING");
         blockDeathEvent = true;
         stocks -= 1;
+        stockController.OnStockChange();
         if (stocks <= 0)
         {
             isAlive = false;

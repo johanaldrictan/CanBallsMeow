@@ -1457,6 +1457,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9110487585680795208, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[0]
+      value: 
+      objectReference: {fileID: 203930869}
+    - target: {fileID: 9110487585680795208, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[1]
+      value: 
+      objectReference: {fileID: 298616844}
+    - target: {fileID: 9110487585680795208, guid: 4d6c64fcc0890124a8a9145a2ec10984,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[2]
+      value: 
+      objectReference: {fileID: 503173616}
     - target: {fileID: 0}
       propertyPath: m_Enabled
       value: 1
@@ -2780,6 +2795,21 @@ PrefabInstance:
       propertyPath: fatness
       value: 
       objectReference: {fileID: 1450954547}
+    - target: {fileID: 6812797840402100885, guid: 5af1c92830ddba74a8d827ac2c5b9975,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[0]
+      value: 
+      objectReference: {fileID: 1648324243}
+    - target: {fileID: 6812797840402100885, guid: 5af1c92830ddba74a8d827ac2c5b9975,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[1]
+      value: 
+      objectReference: {fileID: 1688104789}
+    - target: {fileID: 6812797840402100885, guid: 5af1c92830ddba74a8d827ac2c5b9975,
+        type: 3}
+      propertyPath: emptyHearts.Array.data[2]
+      value: 
+      objectReference: {fileID: 2078650965}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5af1c92830ddba74a8d827ac2c5b9975, type: 3}
 --- !u!1 &1207889403 stripped
